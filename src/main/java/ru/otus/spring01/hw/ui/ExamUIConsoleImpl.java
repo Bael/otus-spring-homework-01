@@ -27,9 +27,6 @@ public class ExamUIConsoleImpl implements ExamUI {
         return userName;
     }
 
-
-
-
     /// извлекаем выбранные опции
     private List<AnswerOption> parseAnswer(Question q, String input) {
 
