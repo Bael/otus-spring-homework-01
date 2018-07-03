@@ -1,5 +1,6 @@
 package ru.otus.spring01.hw.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.spring01.hw.dao.QuestionDAO;
 import ru.otus.spring01.hw.domain.AnswerOption;
@@ -16,12 +17,14 @@ public class ExamServiceImpl implements ExamService {
 
     private ExamUI examUI;
 
-    public ExamServiceImpl(QuestionDAO questionDAO, ExamUI examUI) {
+    @Value("${successRate}")
+    private double successRate;
 
+
+    public ExamServiceImpl(QuestionDAO questionDAO, ExamUI examUI) {
         this.questionDAO = questionDAO;
         this.examUI = examUI;
     }
-
 
     @Override
     public void examine() {
@@ -31,13 +34,15 @@ public class ExamServiceImpl implements ExamService {
         List<Question> questions = this.questionDAO.loadQuestions();
         Exam exam = new Exam(userName, questions);
 
+
         while (exam.hasNext()) {
+
             Question q = exam.getNext();
             List<AnswerOption> answerOptions = examUI.askQuestion(q);
             exam.putUserAnswers(q, answerOptions);
         }
 
-        examUI.reportResult("Тест закончен. Ваш результат: " + exam.getPercentScore() + "%");
+        examUI.reportResult(exam.getExamResult(successRate));
 
     }
 

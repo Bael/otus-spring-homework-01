@@ -46,7 +46,7 @@ public class Exam {
     }
 
     // userScore / availableScore * 100 - rounded to %NN.NN
-    public double getPercentScore() {
+    private double getPercentScore() {
         if (availableScore == 0)
             return 0;
 
@@ -55,6 +55,12 @@ public class Exam {
         final double v = Math.round(userScore / availableScore * 10000);
         return v / 100;
     }
+
+    // userScore / availableScore * 100 - rounded to %NN.NN
+    public ExamResult getExamResult(double succesRate) {
+        return new ExamResult(getPercentScore(), succesRate);
+    }
+
 
 
 }
