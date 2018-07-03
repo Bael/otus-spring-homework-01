@@ -1,24 +1,46 @@
 package ru.otus.spring01.hw.service;
 
 import ru.otus.spring01.hw.dao.QuestionDAO;
+import ru.otus.spring01.hw.domain.AnswerOption;
 import ru.otus.spring01.hw.domain.Exam;
 import ru.otus.spring01.hw.domain.Question;
+import ru.otus.spring01.hw.ui.ExamUI;
 
 import java.util.List;
+
 
 public class ExamServiceImpl implements ExamService {
 
     private QuestionDAO questionDAO;
 
-    public ExamServiceImpl(QuestionDAO questionDAO) {
+    private ExamUI examUI;
+
+    public ExamServiceImpl(QuestionDAO questionDAO, ExamUI examUI) {
+
         this.questionDAO = questionDAO;
+        this.examUI = examUI;
     }
+
 
     @Override
-    public Exam prepareExam(String userName) {
+    public void examine() {
+
+        String userName = examUI.getUserName();
+
         List<Question> questions = this.questionDAO.loadQuestions();
-        return new Exam(userName, questions);
+        Exam exam = new Exam(userName, questions);
+
+        while (exam.hasNext()) {
+            Question q = exam.getNext();
+            List<AnswerOption> answerOptions = examUI.askQuestion(q);
+            exam.putUserAnswers(q, answerOptions);
+        }
+
+        examUI.reportResult("Тест закончен. Ваш результат: " + exam.getPercentScore() + "%");
+
+
 
 
     }
+
 }

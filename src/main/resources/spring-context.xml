@@ -8,6 +8,7 @@
 
     <bean id="examService" class="ru.otus.spring01.hw.service.ExamServiceImpl">
         <constructor-arg ref="questionDAO" name="questionDAO"/>
+        <constructor-arg ref="examUI" name="examUI"/>
     </bean>
 
     <bean id="examUI" class="ru.otus.spring01.hw.ui.ExamUIConsoleImpl">

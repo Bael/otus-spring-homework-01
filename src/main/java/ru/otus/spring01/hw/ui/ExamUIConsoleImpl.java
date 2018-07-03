@@ -1,9 +1,7 @@
 package ru.otus.spring01.hw.ui;
 
 import ru.otus.spring01.hw.domain.AnswerOption;
-import ru.otus.spring01.hw.domain.Exam;
 import ru.otus.spring01.hw.domain.Question;
-import ru.otus.spring01.hw.service.ExamService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -17,7 +15,7 @@ public class ExamUIConsoleImpl implements ExamUI {
     private String userName;
 
     @Override
-    public void examine(ExamService examService) {
+    public String getUserName() {
 
         in = new Scanner(System.in);
         System.out.println("Добро пожаловать в систему тестирования!");
@@ -26,20 +24,11 @@ public class ExamUIConsoleImpl implements ExamUI {
             System.out.print("Пожалуйста укажите свое имя(не пустое):");
             userName = in.nextLine();
         } while (userName.trim().equals(""));
-
-        Exam exam = examService.prepareExam(userName);
-
-        while (exam.hasNext()) {
-            Question q = exam.getNext();
-            String input = askQuestion(q);
-            List<AnswerOption> options = parseAnswer(q, input);
-            exam.putUserAnswers(q, options);
-        }
-
-        System.out.println("Тест закончен. Ваш результат: " + exam.getPercentScore() + "%");
-
-
+        return userName;
     }
+
+
+
 
     /// извлекаем выбранные опции
     private List<AnswerOption> parseAnswer(Question q, String input) {
@@ -51,7 +40,14 @@ public class ExamUIConsoleImpl implements ExamUI {
                 .collect(Collectors.toList());
     }
 
-    private String askQuestion(Question question) {
+
+    @Override
+    public List<AnswerOption> askQuestion(Question q) {
+        String input = getAnswer(q);
+        return parseAnswer(q, input);
+    }
+
+    private String getAnswer(Question question) {
         String input;
         do {
             printQuestion(question);
@@ -84,5 +80,8 @@ public class ExamUIConsoleImpl implements ExamUI {
         question.getOptions().forEach(answerOption -> System.out.println(answerOption.toString()));
     }
 
-
+    @Override
+    public void reportResult(String result) {
+        System.out.println(result);
+    }
 }

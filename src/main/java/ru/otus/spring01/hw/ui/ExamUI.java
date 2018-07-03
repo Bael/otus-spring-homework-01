@@ -1,7 +1,15 @@
 package ru.otus.spring01.hw.ui;
 
-import ru.otus.spring01.hw.service.ExamService;
+import ru.otus.spring01.hw.domain.AnswerOption;
+import ru.otus.spring01.hw.domain.Question;
+
+import java.util.List;
 
 public interface ExamUI {
-    void examine(ExamService examService);
+
+    String getUserName();
+
+    List<AnswerOption> askQuestion(Question q);
+
+    void reportResult(String result);
 }
